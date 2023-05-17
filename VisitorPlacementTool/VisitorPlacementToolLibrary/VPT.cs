@@ -36,8 +36,11 @@
         {
             bool visitorsAreCreated = false;
 
+            int minVisitors = Convert.ToInt32(Happenings[0].MaxVisitors*.8);
+            int maxVisitors = Convert.ToInt32(Happenings[0].MaxVisitors*1.3);
+
             Random random = new Random();
-            int visitorCount = random.Next(20, 780);
+            int visitorCount = random.Next(minVisitors, maxVisitors);
             int groupedVisitors = 0;
 
             while (groupedVisitors != visitorCount)
@@ -58,6 +61,11 @@
                 {
                     Visitor visitor = new Visitor();
                     group.Visitors.Add(visitor); 
+                }
+
+                if (!group.containAdult())
+                {
+                    break;
                 }
 
                 groupedVisitors += group.Visitors.Count();

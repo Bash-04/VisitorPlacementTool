@@ -21,9 +21,49 @@ namespace VisitorPlacementToolLibrary
         {
             Id = Guid.NewGuid().ToString();
             SignupDate = DateTime.Now;
+            GetDateOfBirth();
+            GetName();
         }
 
         // Methods
+        #region GetVisitorInfo
+        public void GetDateOfBirth()
+        {
+            Random random = new Random();
+            int ageInDays = random.Next(365, 24000);
 
+            DateOfBirth = DateOnly.FromDateTime(DateTime.Now.AddDays(-ageInDays));
+            Age = DateTime.Now.Year - DateOfBirth.Year;
+            if (Age >= 12)
+            {
+                Adult = true;
+            }
+            else
+            {
+                Adult = false;
+            }
+        }
+
+        public void GetName()
+        {
+            Random r = new Random();
+            int nameLength = r.Next(2, 5);
+            string[] consonants = { "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z" };
+            string[] vowels = { "a", "e", "i", "o", "u", "y" };
+            string name = "";
+            name += consonants[r.Next(consonants.Length)].ToUpper();
+            name += vowels[r.Next(vowels.Length)];
+            int b = 2; //b tells how many times a new letter has been added. It's 2 right now because the first two letters are already in the name.
+            while (b <= nameLength)
+            {
+                name += consonants[r.Next(consonants.Length)];
+                b++;
+                name += vowels[r.Next(vowels.Length)];
+                b++;
+            }
+
+            Name = name;
+        }
+        #endregion
     }
 }

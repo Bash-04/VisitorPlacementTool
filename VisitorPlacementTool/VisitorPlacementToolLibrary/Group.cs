@@ -19,6 +19,18 @@ namespace VisitorPlacementToolLibrary
         }
 
         // Methods
-
+        public bool containAdult()
+        {
+            bool containsAdult = false;
+            foreach (var visitor in Visitors)
+            {
+                if (visitor.Adult)
+                {
+                    containsAdult = true;
+                    break;
+                }
+            }
+            return containsAdult;
+        }
     }
 }
