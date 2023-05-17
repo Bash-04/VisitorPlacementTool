@@ -34,7 +34,7 @@
             bool visitorsAreCreated = false;
 
             Random random = new Random();
-            int visitorCount = random.Next(20, 800);
+            int visitorCount = random.Next(20, 780);
             int groupedVisitors = 0;
 
             while (groupedVisitors != visitorCount)
