@@ -20,7 +20,7 @@ namespace VisitorPlacementToolLibrary
             Id = Guid.NewGuid().ToString();
             Random random = new Random();
             int daysToSignup = random.Next(1, 200);
-            SignupDeadline = DateOnly.FromDateTime(DateTime.Now.AddDays(daysToSignup));
+            SignupDeadline = DateOnly.FromDateTime(DateTime.Now.AddMilliseconds(daysToSignup));
             Sectors = new List<Sector>();
         }
 

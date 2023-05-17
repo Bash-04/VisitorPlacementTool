@@ -26,3 +26,11 @@ foreach (var happening in vpt.Happenings)
     Console.WriteLine($"{happening.MaxVisitors} Seats");
     Console.WriteLine();
 }
+
+vpt.TryCreateRandomVisitors();
+
+foreach (var group in vpt.groups)
+{
+    Console.WriteLine($"{group.Id} - {group.Visitors.Count()}");
+}
+Console.WriteLine(vpt.RandomVisitorAmount);

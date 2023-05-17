@@ -3,7 +3,7 @@
   <Class Name="VisitorPlacementToolLibrary.VPT">
     <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAABAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>BAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>VPT.cs</FileName>
     </TypeIdentifier>
   </Class>

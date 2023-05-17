@@ -15,6 +15,7 @@ namespace VisitorPlacementToolLibrary
         public Group()
         {
             Id = Guid.NewGuid().ToString();
+            Visitors = new List<Visitor>();
         }
 
         // Methods
