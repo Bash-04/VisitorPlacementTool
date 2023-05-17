@@ -3,20 +3,26 @@
     public class VPT
     {
         // Properties
-        public List<Event> Events { get; private set; }
+        public List<Happening> Happenings { get; private set; }
 
         // Constructors
         public VPT() 
         {
-            Events = new List<Event>();
+            Happenings = new List<Happening>();
         }
 
         // Methods
-        public bool TryCreateNewEvent()
+        public bool TryCreateNewHappening()
         {
-            bool eventIsCreated = false;
+            bool happeningIsCreated = false;
 
-            return eventIsCreated;
+            Happening happening = new Happening();
+
+            happening.CreateSectors();
+
+            Happenings.Add(happening);
+
+            return happeningIsCreated;
         }
     }
 }
