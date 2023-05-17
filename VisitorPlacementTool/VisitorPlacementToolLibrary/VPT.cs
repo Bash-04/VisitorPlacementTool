@@ -16,6 +16,7 @@
         }
 
         // Methods
+        #region Create happening
         public bool TryCreateNewHappening()
         {
             bool happeningIsCreated = false;
@@ -28,7 +29,9 @@
 
             return happeningIsCreated;
         }
+        #endregion
 
+        #region Create and group visitors
         public bool TryCreateRandomVisitors()
         {
             bool visitorsAreCreated = false;
@@ -65,5 +68,20 @@
 
             return visitorsAreCreated;
         }
+        #endregion
+
+        #region Sorting algorithm
+        public bool SortVisitors()
+        {
+            bool visitorsAreSorted = false;
+
+            foreach (var happening in Happenings)
+            {
+                visitorsAreSorted = true;
+            }
+
+            return visitorsAreSorted;
+        }
+        #endregion
     }
 }
