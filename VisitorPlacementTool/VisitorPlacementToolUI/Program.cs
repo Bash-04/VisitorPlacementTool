@@ -29,7 +29,7 @@ foreach (var happening in vpt.Happenings)
 
 vpt.TryCreateRandomVisitors();
 
-foreach (var group in vpt.groups)
+foreach (var group in vpt.Groups)
 {
     Console.WriteLine($"{group.Id} - {group.Visitors.Count()}");
     foreach (var visitor in group.Visitors)
@@ -38,4 +38,5 @@ foreach (var group in vpt.groups)
     }
     Console.WriteLine();
 }
+
 Console.WriteLine(vpt.RandomVisitorAmount);

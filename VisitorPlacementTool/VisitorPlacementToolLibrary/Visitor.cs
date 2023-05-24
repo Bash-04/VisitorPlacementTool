@@ -20,13 +20,21 @@ namespace VisitorPlacementToolLibrary
         public Visitor()
         {
             Id = Guid.NewGuid().ToString();
-            SignupDate = DateTime.Now;
+            GetRandomSignupDate();
             GetDateOfBirth();
             GetName();
         }
 
         // Methods
         #region GetVisitorInfo
+        private void GetRandomSignupDate()
+        {
+            Random random = new Random();
+            // 1 dag tot 8 maanden geleden aangemeld
+            int days = random.Next(1, 244);
+            SignupDate = DateTime.Now.AddDays(-days);
+        }
+
         public void GetDateOfBirth()
         {
             Random random = new Random();

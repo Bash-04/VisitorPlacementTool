@@ -10,6 +10,8 @@ namespace VisitorPlacementToolLibrary
         // Properties
         public string Id { get; private set; }
         public List<Visitor> Visitors { get; private set; }
+        public DateTime EarliestSignupDate { get; private set; }
+        public bool ContainsAdult { get; private set; }
 
         // Constructors
         public Group()
@@ -19,18 +21,47 @@ namespace VisitorPlacementToolLibrary
         }
 
         // Methods
-        public bool containAdult()
+        public void CheckIfAdultAndEarliestSignup()
         {
-            bool containsAdult = false;
+            ContainAdult();
+            CheckIfNewVisitorHasEarliestSignupDate();
+        }
+
+        private bool ContainAdult()
+        {
+            ContainsAdult = false;
             foreach (var visitor in Visitors)
             {
                 if (visitor.Adult)
                 {
-                    containsAdult = true;
+                    ContainsAdult = true;
                     break;
                 }
             }
-            return containsAdult;
+            return ContainsAdult;
+        }
+
+        private bool CheckIfNewVisitorHasEarliestSignupDate()
+        {
+            bool hasEarliestSignupDate = false;
+            if (Visitors.Count() == 1)
+            {
+                EarliestSignupDate = Visitors[0].SignupDate;
+                hasEarliestSignupDate = true;
+            }
+            else
+            {
+                for (int i = Visitors.Count() - 1; i < Visitors.Count(); i++)
+                {
+                    if (Visitors[i].SignupDate < EarliestSignupDate)
+                    {
+                        EarliestSignupDate = Visitors[i].SignupDate;
+                        hasEarliestSignupDate = true;
+                        break;
+                    }
+                }
+            }
+            return hasEarliestSignupDate;
         }
     }
 }

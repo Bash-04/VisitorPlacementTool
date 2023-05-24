@@ -4,14 +4,14 @@
     {
         // Properties
         public List<Happening> Happenings { get; private set; }
-        public List<Group> groups { get; private set; }
+        public List<Group> Groups { get; private set; }
         public int RandomVisitorAmount { get; private set; }
 
         // Constructors
         public VPT() 
         {
             Happenings = new List<Happening>();
-            groups = new List<Group>();
+            Groups = new List<Group>();
             RandomVisitorAmount = 0;
         }
 
@@ -61,25 +61,34 @@
                 {
                     Visitor visitor = new Visitor();
                     group.Visitors.Add(visitor); 
+                    group.CheckIfAdultAndEarliestSignup();
                 }
 
-                if (!group.containAdult())
+                // If the group contains an adult, add it to the list of groups
+                if (!group.ContainsAdult)
                 {
                     break;
                 }
 
                 groupedVisitors += group.Visitors.Count();
-                groups.Add(group);
+                Groups.Add(group);
             }
 
             RandomVisitorAmount = visitorCount;
+            SortVisitors();
 
             return visitorsAreCreated;
         }
         #endregion
 
         #region Sorting algorithm
-        public bool SortVisitors()
+        private void SortVisitors()
+        {
+            SortVisitorsBySignupDate();
+            SortVisitorsOverSeats();
+        }
+
+        private bool SortVisitorsOverSeats()
         {
             bool visitorsAreSorted = false;
 
@@ -89,6 +98,12 @@
             }
 
             return visitorsAreSorted;
+        }
+
+        private void SortVisitorsBySignupDate()
+        {
+            var orderedGroupsOnSignupDate = Groups.OrderBy(x => x.EarliestSignupDate.Date);
+            Groups = orderedGroupsOnSignupDate.ToList();
         }
         #endregion
     }
