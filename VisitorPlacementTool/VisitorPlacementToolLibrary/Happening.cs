@@ -13,6 +13,7 @@ namespace VisitorPlacementToolLibrary
         public DateOnly SignupDeadline { get; private set; }
         public List<Sector> Sectors { get; private set; }
         public List<Group> Registrations { get; private set; }
+        public bool Full { get; set; }
 
         // Constructors
         public Happening()
@@ -35,9 +36,11 @@ namespace VisitorPlacementToolLibrary
             for (int i = 0; i < sectorCount; i++)
             {
                 Char sectorLetter = (Char)((true ? 65 : 97) + (Sectors.Count()));
+                int RowsCount = random.Next(1, 4);
+                int RowLength = random.Next(1, 11);
 
-                Sector sector = new Sector();
-                sector.CreateRows(sectorLetter);
+                Sector sector = new Sector(sectorLetter, RowsCount, RowLength);
+                sector.CreateRows();
                 Sectors.Add(sector);
             }
 
@@ -61,6 +64,20 @@ namespace VisitorPlacementToolLibrary
             }
 
             return MaxVisitors;
+        }
+
+        public bool CheckIfFull()
+        {
+            Full = true;
+            foreach (var sector in Sectors)
+            {
+                if (!sector.Full)
+                {
+                    Full = false;
+                    break;
+                }
+            }
+            return Full;
         }
     }
 }

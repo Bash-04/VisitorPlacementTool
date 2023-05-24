@@ -12,6 +12,7 @@ namespace VisitorPlacementToolLibrary
         // Code = Sector letter + RowNumber 
         public string Code { get; private set;}
         public List<Seat> Seats { get; private set; }
+        public bool Full { get; set; }
 
         // Constructors
         public Row(int rowNumber, char sectorLetter)
@@ -33,6 +34,20 @@ namespace VisitorPlacementToolLibrary
             }
 
             return seatsHaveBeenCreated;
+        }
+
+        public bool CheckIfFull()
+        {
+            Full = true;
+            foreach (var seat in Seats)
+            {
+                if (!seat.Occupied)
+                {
+                    Full = false;
+                    break;
+                }
+            }
+            return Full;
         }
     }
 }

@@ -10,31 +10,28 @@ VPT vpt = new VPT();
 
 vpt.TryCreateNewHappening();
 
-foreach (var happening in vpt.Happenings)
+vpt.TryCreateRandomVisitors();
+
+foreach (var sector in vpt.Happening.Sectors)
 {
-    foreach (var sector in happening.Sectors)
+    foreach(var row in sector.Rows)
     {
-        foreach(var row in sector.Rows)
+        foreach(var seat in row.Seats)
         {
-            foreach(var seat in row.Seats)
-            {
-                Console.WriteLine(seat.Code);
-            }
+            Console.WriteLine($"{seat.Code} - {seat.Visitor.Name}");
         }
     }
-    Console.WriteLine($"{happening.Sectors.Count()} Sectors");
-    Console.WriteLine($"{happening.MaxVisitors} Seats");
-    Console.WriteLine();
 }
-
-vpt.TryCreateRandomVisitors();
+Console.WriteLine($"{vpt.Happening.Sectors.Count()} Sectors");
+Console.WriteLine($"{vpt.Happening.MaxVisitors} Seats");
+Console.WriteLine();
 
 foreach (var group in vpt.Groups)
 {
     Console.WriteLine($"{group.Id} - {group.Visitors.Count()}");
     foreach (var visitor in group.Visitors)
     {
-        Console.WriteLine($"    {visitor.Name} - {visitor.Adult}");
+        Console.WriteLine($"    {visitor.Name} - {visitor.Adult} - {visitor.AssignedSeat}");
     }
     Console.WriteLine();
 }

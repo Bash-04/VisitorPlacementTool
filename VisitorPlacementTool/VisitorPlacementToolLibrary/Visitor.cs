@@ -14,7 +14,7 @@ namespace VisitorPlacementToolLibrary
         public int Age { get; private set; }
         public bool Adult { get; private set; }
         public DateTime SignupDate { get; private set; }
-        public Seat Seat { get; private set; }
+        public string AssignedSeat { get; set; }
 
         // Constructors
         public Visitor()
@@ -23,6 +23,10 @@ namespace VisitorPlacementToolLibrary
             GetRandomSignupDate();
             GetDateOfBirth();
             GetName();
+        }
+        public Visitor(string empty)
+        {
+            Name = empty;
         }
 
         // Methods

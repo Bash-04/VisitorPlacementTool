@@ -1,16 +1,15 @@
-﻿namespace VisitorPlacementToolLibrary
+namespace VisitorPlacementToolLibrary
 {
     public class VPT
     {
         // Properties
-        public List<Happening> Happenings { get; private set; }
+        public Happening Happening { get; private set; }
         public List<Group> Groups { get; private set; }
         public int RandomVisitorAmount { get; private set; }
 
         // Constructors
         public VPT() 
         {
-            Happenings = new List<Happening>();
             Groups = new List<Group>();
             RandomVisitorAmount = 0;
         }
@@ -25,7 +24,7 @@
 
             happening.CreateSectors();
 
-            Happenings.Add(happening);
+            Happening = happening;
 
             return happeningIsCreated;
         }
@@ -36,8 +35,8 @@
         {
             bool visitorsAreCreated = false;
 
-            int minVisitors = Convert.ToInt32(Happenings[0].MaxVisitors*.8);
-            int maxVisitors = Convert.ToInt32(Happenings[0].MaxVisitors*1.3);
+            int minVisitors = Convert.ToInt32(Happening.MaxVisitors*.8);
+            int maxVisitors = Convert.ToInt32(Happening.MaxVisitors*1.3);
 
             Random random = new Random();
             int visitorCount = random.Next(minVisitors, maxVisitors);
@@ -75,32 +74,97 @@
             }
 
             RandomVisitorAmount = visitorCount;
-            SortVisitors();
+            StartSorting();
 
             return visitorsAreCreated;
         }
         #endregion
 
         #region Sorting algorithm
-        private void SortVisitors()
+        private void StartSorting()
         {
-            SortVisitorsBySignupDate();
-            SortVisitorsOverSeats();
+            OrderGroupsBySignupDate();
+            SortGroups();
         }
 
-        private bool SortVisitorsOverSeats()
+        #region Sorting algorithm visitors over seats
+        private void SortGroups()
         {
-            bool visitorsAreSorted = false;
-
-            foreach (var happening in Happenings)
+            foreach (var group in Groups)
             {
-                visitorsAreSorted = true;
+                if (Happening.CheckIfFull())
+                {
+                    Happening.Full = true;
+                }
+                else
+                {
+                    SortVisitors(group);
+                }
             }
-
-            return visitorsAreSorted;
         }
 
-        private void SortVisitorsBySignupDate()
+        private void SortVisitors(Group group)
+        {
+            foreach (var visitor in group.Visitors)
+            {
+                SortOverSectors(visitor);
+            }
+        }
+
+        private void SortOverSectors(Visitor visitor)
+        {
+            foreach (var sector in Happening.Sectors)
+            {
+                if (sector.Full)
+                {
+                }
+                else
+                {
+                    SortOverRows(sector, visitor);
+                    if (visitor.AssignedSeat != "")
+                    {
+                        sector.CheckIfFull();
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void SortOverRows(Sector sector, Visitor visitor)
+        {
+            foreach (var row in sector.Rows)
+            {
+                if (row.CheckIfFull())
+                {
+                    row.Full = true;
+                }
+                else
+                {
+                    SortOverSeats(row, visitor);
+                    if (visitor.AssignedSeat != "")
+                    {
+                        row.CheckIfFull();
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void SortOverSeats(Row row, Visitor visitor)
+        {
+            foreach (var seat in row.Seats)
+            {
+                if (seat.Visitor.Name == "")
+                {
+                    seat.AssignVisitorToSeat(visitor);
+                    visitor.AssignedSeat = seat.Code;
+                    break;
+                }
+            }
+        }
+        #endregion
+
+        private void OrderGroupsBySignupDate()
         {
             var orderedGroupsOnSignupDate = Groups.OrderBy(x => x.EarliestSignupDate.Date);
             Groups = orderedGroupsOnSignupDate.ToList();
