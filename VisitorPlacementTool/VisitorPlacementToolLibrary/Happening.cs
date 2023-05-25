@@ -24,7 +24,7 @@ namespace VisitorPlacementToolLibrary
             SignupDeadline = DateOnly.FromDateTime(DateTime.Now.AddDays(-daysToSignup));
             Sectors = new List<Sector>();
         }
-
+        
         // Methods
         public bool CreateSectors()
         {
@@ -37,7 +37,7 @@ namespace VisitorPlacementToolLibrary
             {
                 Char sectorLetter = (Char)((true ? 65 : 97) + (Sectors.Count()));
                 int RowsCount = random.Next(1, 4);
-                int RowLength = random.Next(1, 11);
+                int RowLength = random.Next(3, 11);
 
                 Sector sector = new Sector(sectorLetter, RowsCount, RowLength);
                 sector.CreateRows();
