@@ -43,7 +43,7 @@ namespace VisitorPlacementToolLibrary
 
             return rowsHaveBeenCreated;
         }
-
+        
         public int CountTotalSeats()
         {
             TotalSeats = 0;
