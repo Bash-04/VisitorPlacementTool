@@ -74,14 +74,13 @@ namespace VisitorPlacementToolLibrary
             }
 
             RandomVisitorAmount = visitorCount;
-            StartSorting();
 
             return visitorsAreCreated;
         }
         #endregion
 
         #region Sorting algorithm
-        private void StartSorting()
+        public void StartSorting()
         {
             OrderGroupsBySignupDate();
             SortGroups();

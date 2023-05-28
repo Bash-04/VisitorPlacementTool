@@ -12,6 +12,8 @@ vpt.TryCreateNewHappening();
 
 vpt.TryCreateRandomVisitors();
 
+vpt.StartSorting();
+
 foreach (var sector in vpt.Happening.Sectors)
 {
     foreach(var row in sector.Rows)
