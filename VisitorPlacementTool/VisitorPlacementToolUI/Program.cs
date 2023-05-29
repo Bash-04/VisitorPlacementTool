@@ -24,13 +24,14 @@ foreach (var sector in vpt.Happening.Sectors)
         }
     }
 }
-Console.WriteLine($"{vpt.Happening.Sectors.Count()} Sectors");
-Console.WriteLine($"{vpt.Happening.MaxVisitors} Seats");
+Console.WriteLine($"{vpt.Happening.Sectors.Count()} sectors");
+Console.WriteLine($"{vpt.Happening.MaxVisitors} seats");
+Console.WriteLine($"{vpt.Happening.AvailableSeats} empty seats");
 Console.WriteLine();
 
 foreach (var group in vpt.Groups)
 {
-    Console.WriteLine($"{group.Id} - {group.Visitors.Count()}");
+    Console.WriteLine($"{group.Id} - {group.Visitors.Count()} Visitors - {group.UnsortedGroupMembers} Unseated");
     foreach (var visitor in group.Visitors)
     {
         Console.WriteLine($"    {visitor.Name} - {visitor.Adult} - {visitor.AssignedSeat}");
@@ -38,4 +39,4 @@ foreach (var group in vpt.Groups)
     Console.WriteLine();
 }
 
-Console.WriteLine(vpt.RandomVisitorAmount);
+Console.WriteLine($"{vpt.RandomVisitorAmount} visitors");

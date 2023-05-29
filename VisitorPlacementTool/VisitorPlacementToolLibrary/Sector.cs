@@ -28,6 +28,7 @@ namespace VisitorPlacementToolLibrary
         }
 
         // Methods
+        #region Create
         public bool CreateRows()
         {
             bool rowsHaveBeenCreated = false;
@@ -43,7 +44,9 @@ namespace VisitorPlacementToolLibrary
 
             return rowsHaveBeenCreated;
         }
-        
+        #endregion
+
+        #region Count
         public int CountTotalSeats()
         {
             TotalSeats = 0;
@@ -56,6 +59,21 @@ namespace VisitorPlacementToolLibrary
             return TotalSeats;
         }
 
+        public int CountAvailableSeats()
+        {
+            AvailableSeats = 0;
+
+            foreach (var row in Rows)
+            {
+                row.CountAvailableSeats();
+                AvailableSeats += row.AvailableSeats;
+            }
+
+            return AvailableSeats;
+        }
+        #endregion
+
+        #region Check
         public bool CheckIfFull()
         {
             Full = true;
@@ -69,5 +87,6 @@ namespace VisitorPlacementToolLibrary
             }
             return Full;
         }
+        #endregion
     }
 }

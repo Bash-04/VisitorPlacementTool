@@ -12,6 +12,7 @@ namespace VisitorPlacementToolLibrary
         // Code = Sector letter + RowNumber 
         public string Code { get; private set;}
         public List<Seat> Seats { get; private set; }
+        public int AvailableSeats { get; private set; }
         public bool Full { get; set; }
 
         // Constructors
@@ -23,6 +24,7 @@ namespace VisitorPlacementToolLibrary
         }
 
         // Methods
+        #region Create
         public bool CreateSeats(int length)
         {
             bool seatsHaveBeenCreated = false;
@@ -35,7 +37,24 @@ namespace VisitorPlacementToolLibrary
 
             return seatsHaveBeenCreated;
         }
+        #endregion
 
+        #region Count
+        public int CountAvailableSeats()
+        {
+            AvailableSeats = 0;
+            foreach (var seat in Seats)
+            {
+                if (!seat.Occupied)
+                {
+                    AvailableSeats++;
+                }
+            }
+            return AvailableSeats;
+        }
+        #endregion
+
+        #region Check
         public bool CheckIfFull()
         {
             Full = true;
@@ -49,5 +68,6 @@ namespace VisitorPlacementToolLibrary
             }
             return Full;
         }
+        #endregion
     }
 }

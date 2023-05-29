@@ -12,6 +12,9 @@ namespace VisitorPlacementToolLibrary
         public List<Visitor> Visitors { get; private set; }
         public DateTime EarliestSignupDate { get; private set; }
         public bool ContainsAdult { get; private set; }
+        public int ChildrenCount { get; private set; }
+        public int AdultCount { get; private set; }
+        public int UnsortedGroupMembers { get; set; }
 
         // Constructors
         public Group()
@@ -21,24 +24,11 @@ namespace VisitorPlacementToolLibrary
         }
 
         // Methods
-        public void CheckIfAdultAndEarliestSignup()
+        #region Check
+        public void DefaultCheckAndCount()
         {
-            ContainAdult();
+            CountAdultsAndChildren();
             CheckIfNewVisitorHasEarliestSignupDate();
-        }
-
-        private bool ContainAdult()
-        {
-            ContainsAdult = false;
-            foreach (var visitor in Visitors)
-            {
-                if (visitor.Adult)
-                {
-                    ContainsAdult = true;
-                    break;
-                }
-            }
-            return ContainsAdult;
         }
 
         private bool CheckIfNewVisitorHasEarliestSignupDate()
@@ -63,5 +53,35 @@ namespace VisitorPlacementToolLibrary
             }
             return hasEarliestSignupDate;
         }
+        #endregion
+
+        #region Count
+        private bool CountAdultsAndChildren()
+        {
+            ContainsAdult = false;
+            foreach (var visitor in Visitors)
+            {
+                if (visitor.Adult)
+                {
+                    AdultCount++;
+                    ContainsAdult = true;
+                }
+                else
+                {
+                    ChildrenCount++;
+                }
+                UnsortedGroupMembers++;
+            }
+            return ContainsAdult;
+        }
+        #endregion
+
+        #region Order by
+        public void OrderGroupByAge()
+        {
+            var orderedGroupOnAge = Visitors.OrderByDescending(x => x.DateOfBirth);
+            Visitors = orderedGroupOnAge.ToList();
+        }
+        #endregion
     }
 }

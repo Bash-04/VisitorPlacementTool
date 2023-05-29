@@ -60,11 +60,16 @@ namespace VisitorPlacementToolLibrary
                 {
                     Visitor visitor = new Visitor();
                     group.Visitors.Add(visitor); 
-                    group.CheckIfAdultAndEarliestSignup();
                 }
 
+                group.DefaultCheckAndCount();
+
                 // If the group contains an adult, add it to the list of groups
-                if (!group.ContainsAdult)
+                if (group.ChildrenCount > 9 && group.AdultCount < 2)
+                {
+                    break;
+                }
+                else if (!group.ContainsAdult)
                 {
                     break;
                 }
@@ -82,7 +87,9 @@ namespace VisitorPlacementToolLibrary
         #region Sorting algorithm
         public void StartSorting()
         {
+            Happening.CountAvailableSeats();
             OrderGroupsBySignupDate();
+            OrderGroupsBySize();
             SortGroups();
         }
 
@@ -91,6 +98,8 @@ namespace VisitorPlacementToolLibrary
         {
             foreach (var group in Groups)
             {
+                group.OrderGroupByAge();
+
                 if (Happening.CheckIfFull())
                 {
                     Happening.Full = true;
@@ -106,22 +115,23 @@ namespace VisitorPlacementToolLibrary
         {
             foreach (var visitor in group.Visitors)
             {
-                SortOverSectors(visitor);
+                SortOverSectors(group, visitor);
             }
         }
 
-        private void SortOverSectors(Visitor visitor)
+        private void SortOverSectors(Group group, Visitor visitor)
         {
             foreach (var sector in Happening.Sectors)
             {
-                if (sector.Full)
+                if (sector.AvailableSeats < group.Visitors.Count())
                 {
                 }
                 else
                 {
-                    SortOverRows(sector, visitor);
+                    SortOverRows(group, sector, visitor);
                     if (visitor.AssignedSeat != "")
                     {
+                        group.UnsortedGroupMembers--;
                         sector.CheckIfFull();
                         break;
                     }
@@ -129,7 +139,7 @@ namespace VisitorPlacementToolLibrary
             }
         }
 
-        private void SortOverRows(Sector sector, Visitor visitor)
+        private void SortOverRows(Group group, Sector sector, Visitor visitor)
         {
             foreach (var row in sector.Rows)
             {
@@ -137,9 +147,18 @@ namespace VisitorPlacementToolLibrary
                 {
                     row.Full = true;
                 }
-                else
+                else if (visitor.Adult)
                 {
-                    SortOverSeats(row, visitor);
+                    SortOverSeats(group, row, visitor);
+                    if (visitor.AssignedSeat != "")
+                    {
+                        row.CheckIfFull();
+                        break;
+                    }
+                }
+                else if (row.RowNumber == 1)
+                {
+                    SortOverSeats(group, row, visitor);
                     if (visitor.AssignedSeat != "")
                     {
                         row.CheckIfFull();
@@ -149,7 +168,7 @@ namespace VisitorPlacementToolLibrary
             }
         }
 
-        private void SortOverSeats(Row row, Visitor visitor)
+        private void SortOverSeats(Group group, Row row, Visitor visitor)
         {
             foreach (var seat in row.Seats)
             {
@@ -157,17 +176,26 @@ namespace VisitorPlacementToolLibrary
                 {
                     seat.AssignVisitorToSeat(visitor);
                     visitor.AssignedSeat = seat.Code;
+                    Happening.CountAvailableSeats();
                     break;
                 }
             }
         }
         #endregion
 
+        #region Order By
         private void OrderGroupsBySignupDate()
         {
             var orderedGroupsOnSignupDate = Groups.OrderBy(x => x.EarliestSignupDate.Date);
             Groups = orderedGroupsOnSignupDate.ToList();
         }
+        private void OrderGroupsBySize()
+        {
+            var orderedGroupsOnSize = Groups.OrderByDescending(x => x.Visitors.Count());
+            Groups = orderedGroupsOnSize.ToList();
+        }
+        #endregion
+
         #endregion
     }
 }

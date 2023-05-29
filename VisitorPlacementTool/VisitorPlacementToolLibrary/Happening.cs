@@ -13,6 +13,7 @@ namespace VisitorPlacementToolLibrary
         public DateOnly SignupDeadline { get; private set; }
         public List<Sector> Sectors { get; private set; }
         public List<Group> Registrations { get; private set; }
+        public int AvailableSeats { get; private set; }
         public bool Full { get; set; }
 
         // Constructors
@@ -24,8 +25,9 @@ namespace VisitorPlacementToolLibrary
             SignupDeadline = DateOnly.FromDateTime(DateTime.Now.AddDays(-daysToSignup));
             Sectors = new List<Sector>();
         }
-        
+
         // Methods
+        #region Create
         public bool CreateSectors()
         {
             bool sectorsHaveBeenCreated = false;
@@ -49,11 +51,15 @@ namespace VisitorPlacementToolLibrary
                 sectorsHaveBeenCreated = true;
             }
 
+            OrderSectorsByRowCount();
+            OrderSectorsByLenght();
             CountMaxVisitors();
 
             return sectorsHaveBeenCreated;
         }
+        #endregion
 
+        #region Count
         public int CountMaxVisitors()
         {
             MaxVisitors = 0;
@@ -66,6 +72,19 @@ namespace VisitorPlacementToolLibrary
             return MaxVisitors;
         }
 
+        public int CountAvailableSeats()
+        {
+            AvailableSeats = 0;
+            foreach (var sector in Sectors)
+            {
+                sector.CountAvailableSeats();
+                AvailableSeats += sector.AvailableSeats;
+            }
+            return AvailableSeats;
+        }
+        #endregion
+
+        #region Check
         public bool CheckIfFull()
         {
             Full = true;
@@ -79,5 +98,20 @@ namespace VisitorPlacementToolLibrary
             }
             return Full;
         }
+        #endregion
+
+        #region Order by
+        private void OrderSectorsByRowCount()
+        {
+            var orderedSectionsOnRowCount = Sectors.OrderByDescending(x => x.RowCount);
+            Sectors = orderedSectionsOnRowCount.ToList();
+        }
+
+        private void OrderSectorsByLenght()
+        {
+            var orderedSectionsOnLenght = Sectors.OrderByDescending(x => x.RowLength);
+            Sectors = orderedSectionsOnLenght.ToList();
+        }
+        #endregion
     }
 }
