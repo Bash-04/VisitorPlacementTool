@@ -39,4 +39,6 @@ foreach (var group in vpt.Groups)
     Console.WriteLine();
 }
 
+Console.WriteLine($"{vpt.Groups.Count()} groups");
 Console.WriteLine($"{vpt.RandomVisitorAmount} visitors");
+Console.WriteLine($"{vpt.UnsortedVisitors} unseated visitors");

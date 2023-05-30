@@ -6,6 +6,7 @@ namespace VisitorPlacementToolLibrary
         public Happening Happening { get; private set; }
         public List<Group> Groups { get; private set; }
         public int RandomVisitorAmount { get; private set; }
+        public int UnsortedVisitors { get; private set; }
 
         // Constructors
         public VPT() 
@@ -91,9 +92,22 @@ namespace VisitorPlacementToolLibrary
             OrderGroupsBySignupDate();
             OrderGroupsBySize();
             SortGroups();
+            UnsortedVisitors = CountUnsortedVisitors();
         }
 
-        #region Sorting algorithm visitors over seats
+        #region Count
+        private int CountUnsortedVisitors()
+        {
+            int unsortedVisitors = 0;
+            foreach (var group in Groups)
+            {
+                unsortedVisitors += group.UnsortedGroupMembers;
+            }
+            return unsortedVisitors;
+        }
+        #endregion
+
+        #region (Got to redo) Sorting algorithm visitors over seats
         private void SortGroups()
         {
             foreach (var group in Groups)
@@ -123,7 +137,7 @@ namespace VisitorPlacementToolLibrary
         {
             foreach (var sector in Happening.Sectors)
             {
-                if (sector.AvailableSeats < group.Visitors.Count())
+                if (sector.Full)
                 {
                 }
                 else
@@ -147,16 +161,7 @@ namespace VisitorPlacementToolLibrary
                 {
                     row.Full = true;
                 }
-                else if (visitor.Adult)
-                {
-                    SortOverSeats(group, row, visitor);
-                    if (visitor.AssignedSeat != "")
-                    {
-                        row.CheckIfFull();
-                        break;
-                    }
-                }
-                else if (row.RowNumber == 1)
+                else
                 {
                     SortOverSeats(group, row, visitor);
                     if (visitor.AssignedSeat != "")
