@@ -106,7 +106,6 @@ namespace VisitorPlacementToolLibrary
             CountAvailableSeats();
             OrderGroups();
             PlaceGroups();
-            CountAvailableSeats();
             UnsortedVisitors = Registrations.Sum(group => group.UnsortedGroupMembers);
         }
 
@@ -114,9 +113,17 @@ namespace VisitorPlacementToolLibrary
         {
             foreach (var group in Registrations)
             {
-                group.OrderGroupByAge();
-                group.DefaultCheckAndCount();
-                PlaceInSector(group);
+                if (AvailableSeats > group.Visitors.Count())
+                {
+                    group.OrderGroupByAge();
+                    group.DefaultCheckAndCount();
+                    PlaceInSector(group);
+                    CountAvailableSeats();
+                }
+                else
+                {
+                    continue;
+                }
             }
         }
 
