@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text.RegularExpressions;
 
 namespace VisitorPlacementToolLibrary
 {
@@ -14,6 +11,8 @@ namespace VisitorPlacementToolLibrary
         public List<Sector> Sectors { get; private set; }
         public List<Group> Registrations { get; private set; }
         public int AvailableSeats { get; private set; }
+        public int VisitorCount { get; private set; }
+        public int UnsortedVisitors { get; private set; }
         public bool Full { get; set; }
 
         // Constructors
@@ -24,6 +23,7 @@ namespace VisitorPlacementToolLibrary
             int daysToSignup = random.Next(1, 31);
             SignupDeadline = DateOnly.FromDateTime(DateTime.Now.AddDays(-daysToSignup));
             Sectors = new List<Sector>();
+            Registrations = new List<Group>();
         }
 
         // Methods
@@ -51,11 +51,89 @@ namespace VisitorPlacementToolLibrary
                 sectorsHaveBeenCreated = true;
             }
 
-            OrderSectorsByRowCount();
-            OrderSectorsByLenght();
+            OrderSectors();
             CountMaxVisitors();
 
             return sectorsHaveBeenCreated;
+        }
+
+        public bool CreateRandomVisitors()
+        {
+            bool visitorsAreCreated = false;
+
+            int minVisitors = Convert.ToInt32(MaxVisitors * .8);
+            int maxVisitors = Convert.ToInt32(MaxVisitors * 1.3);
+
+            Random random = new Random();
+            VisitorCount = random.Next(minVisitors, maxVisitors);
+            int groupedVisitors = 0;
+
+            while (groupedVisitors != VisitorCount)
+            {
+                int groupSize = 0;
+                Group group = new Group();
+
+                if (VisitorCount - groupedVisitors >= 20)
+                {
+                    groupSize = random.Next(1, 21);
+                }
+                else
+                {
+                    groupSize = random.Next(1, VisitorCount - groupedVisitors);
+                }
+
+                for (int i = 0; i < groupSize; i++)
+                {
+                    Visitor visitor = new Visitor();
+                    group.Visitors.Add(visitor);
+                }
+                group.DefaultCheckAndCount();
+
+                if (!ExecuteChecks(group))
+                {
+                    continue;
+                }
+                groupedVisitors += group.Visitors.Count();
+            }
+
+            return visitorsAreCreated;
+        }
+        #endregion
+
+        #region Sort
+        public void PlaceVisitors()
+        {
+            CountAvailableSeats();
+            OrderGroups();
+            PlaceGroups();
+            CountAvailableSeats();
+            UnsortedVisitors = Registrations.Sum(group => group.UnsortedGroupMembers);
+        }
+
+        private void PlaceGroups()
+        {
+            foreach (var group in Registrations)
+            {
+                group.OrderGroupByAge();
+                group.DefaultCheckAndCount();
+                PlaceInSector(group);
+            }
+        }
+
+        private void PlaceInSector(Group group)
+        {
+            foreach (var sector in Sectors)
+            {
+                if (!sector.CheckIfFull())
+                {
+                    sector.PlaceInRow(group);
+                    if (!group.IsPlaced)
+                    {
+                        continue;
+                    }
+                    break;
+                }
+            }
         }
         #endregion
 
@@ -85,6 +163,25 @@ namespace VisitorPlacementToolLibrary
         #endregion
 
         #region Check
+        public bool ExecuteChecks(Group group)
+        {
+            bool groupIsValid = false;
+            // If the group contains an adult, add it to the list of groups
+            if (group.ChildrenCount > 9 && group.AdultCount < 2)
+            {
+            }
+            else if (!group.ContainsAdult)
+            {
+            }
+            else
+            {
+                group.DefaultCheckAndCount();
+                Registrations.Add(group);
+                groupIsValid = true;
+            }
+            return groupIsValid;
+        }
+
         public bool CheckIfFull()
         {
             Full = true;
@@ -101,12 +198,32 @@ namespace VisitorPlacementToolLibrary
         #endregion
 
         #region Order by
+        private void OrderGroups()
+        {
+            OrderRegistrationsBySignupDate();
+            OrderRegistrationsBySize();
+        }
+        private void OrderRegistrationsBySignupDate()
+        {
+            var orderedGroupsOnSignupDate = Registrations.OrderBy(x => x.EarliestSignupDate.Date);
+            Registrations = orderedGroupsOnSignupDate.ToList();
+        }
+        private void OrderRegistrationsBySize()
+        {
+            var orderedGroupsOnSize = Registrations.OrderByDescending(x => x.Visitors.Count());
+            Registrations = orderedGroupsOnSize.ToList();
+        }
+
+        private void OrderSectors()
+        {
+            OrderSectorsByRowCount();
+            OrderSectorsByLenght();
+        }
         private void OrderSectorsByRowCount()
         {
             var orderedSectionsOnRowCount = Sectors.OrderByDescending(x => x.RowCount);
             Sectors = orderedSectionsOnRowCount.ToList();
         }
-
         private void OrderSectorsByLenght()
         {
             var orderedSectionsOnLenght = Sectors.OrderByDescending(x => x.RowLength);

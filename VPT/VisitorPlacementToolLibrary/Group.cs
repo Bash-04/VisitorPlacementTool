@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace VisitorPlacementToolLibrary
 {
@@ -16,14 +15,12 @@ namespace VisitorPlacementToolLibrary
         public int ChildrenCount { get; private set; }
         public int AdultCount { get; private set; }
         public int UnsortedGroupMembers { get; set; }
-        public bool IsPlaced { get; private set; }
 
         // Constructors
         public Group()
         {
             Id = Guid.NewGuid().ToString();
             Visitors = new List<Visitor>();
-            EarliestSignupDate = DateTime.Now;
         }
 
         // Methods
@@ -32,20 +29,6 @@ namespace VisitorPlacementToolLibrary
         {
             CountAdultsAndChildren();
             CheckIfNewVisitorHasEarliestSignupDate();
-            CountUnsortedGroupMembers();
-            CheckIfAllVisitorsAreSeated();
-        }
-
-        public void CheckIfAllVisitorsAreSeated()
-        {
-            if (Visitors.Count(x => x.Seated) == Visitors.Count())
-            {
-                IsPlaced = true;
-            }
-            else
-            {
-                IsPlaced = false;
-            }
         }
 
         private bool CheckIfNewVisitorHasEarliestSignupDate()
@@ -58,9 +41,9 @@ namespace VisitorPlacementToolLibrary
             }
             else
             {
-                for (int i = 0; i < Visitors.Count(); i++)
+                for (int i = Visitors.Count() - 1; i < Visitors.Count(); i++)
                 {
-                    if (Visitors[i].SignupDate.Date < EarliestSignupDate.Date)
+                    if (Visitors[i].SignupDate < EarliestSignupDate)
                     {
                         EarliestSignupDate = Visitors[i].SignupDate;
                         hasEarliestSignupDate = true;
@@ -76,9 +59,6 @@ namespace VisitorPlacementToolLibrary
         private bool CountAdultsAndChildren()
         {
             ContainsAdult = false;
-            AdultCount = 0;
-            ChildrenCount = 0;
-            UnsortedGroupMembers = 0;
             foreach (var visitor in Visitors)
             {
                 if (visitor.Adult)
@@ -93,11 +73,6 @@ namespace VisitorPlacementToolLibrary
                 UnsortedGroupMembers++;
             }
             return ContainsAdult;
-        }
-
-        private void CountUnsortedGroupMembers()
-        {
-            UnsortedGroupMembers = Visitors.Count(x => x.Seated == false);
         }
         #endregion
 

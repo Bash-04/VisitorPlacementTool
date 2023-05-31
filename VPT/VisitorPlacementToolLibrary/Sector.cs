@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace VisitorPlacementToolLibrary
 {
@@ -36,7 +35,7 @@ namespace VisitorPlacementToolLibrary
 
             for (int i = 0; i < RowCount; i++)
             {
-                Row row = new Row(i + 1, SectorLetter);
+                Row row = new Row(i+1, SectorLetter);
                 row.CreateSeats(RowLength);
                 Rows.Add(row);
             }
@@ -44,16 +43,6 @@ namespace VisitorPlacementToolLibrary
             CountTotalSeats();
 
             return rowsHaveBeenCreated;
-        }
-        #endregion
-
-        #region Sort
-        public void PlaceInRow(Group group)
-        {
-            foreach (var row in Rows)
-            {
-                row.PlaceVisitors(group);
-            }
         }
         #endregion
 

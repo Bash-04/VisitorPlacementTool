@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace VisitorPlacementToolLibrary
 {
@@ -13,7 +12,7 @@ namespace VisitorPlacementToolLibrary
         // Sector row code + "-"follownumber = Code
         public string Code { get; private set; }
         public bool Occupied { get; private set; }
-        public Visitor Visitor { get; private set; }
+        public Visitor Visitor { get; private set;}
 
         // Constructors
         public Seat(int seatNumber, string rowCode)

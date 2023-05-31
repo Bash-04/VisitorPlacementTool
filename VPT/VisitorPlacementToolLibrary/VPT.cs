@@ -63,21 +63,11 @@ namespace VisitorPlacementToolLibrary
                     group.Visitors.Add(visitor); 
                 }
 
-                group.DefaultCheckAndCount();
-
-                // If the group contains an adult, add it to the list of groups
-                if (group.ChildrenCount > 9 && group.AdultCount < 2)
-                {
-                    break;
-                }
-                else if (!group.ContainsAdult)
-                {
-                    break;
-                }
-
                 groupedVisitors += group.Visitors.Count();
                 Groups.Add(group);
             }
+
+            Happening.ExecuteChecks(Groups);
 
             RandomVisitorAmount = visitorCount;
 
@@ -86,7 +76,7 @@ namespace VisitorPlacementToolLibrary
         #endregion
 
         #region Sorting algorithm
-        public void StartSorting()
+        public void PlaceVisitors()
         {
             Happening.CountAvailableSeats();
             OrderGroupsBySignupDate();
@@ -142,7 +132,7 @@ namespace VisitorPlacementToolLibrary
                 }
                 else
                 {
-                    SortOverRows(group, sector, visitor);
+                    SortOverRows(sector, visitor);
                     if (visitor.AssignedSeat != "")
                     {
                         group.UnsortedGroupMembers--;
@@ -153,7 +143,7 @@ namespace VisitorPlacementToolLibrary
             }
         }
 
-        private void SortOverRows(Group group, Sector sector, Visitor visitor)
+        private void SortOverRows(Sector sector, Visitor visitor)
         {
             foreach (var row in sector.Rows)
             {
@@ -163,7 +153,7 @@ namespace VisitorPlacementToolLibrary
                 }
                 else
                 {
-                    SortOverSeats(group, row, visitor);
+                    SortOverSeats(row, visitor);
                     if (visitor.AssignedSeat != "")
                     {
                         row.CheckIfFull();
@@ -173,7 +163,7 @@ namespace VisitorPlacementToolLibrary
             }
         }
 
-        private void SortOverSeats(Group group, Row row, Visitor visitor)
+        private void SortOverSeats(Row row, Visitor visitor)
         {
             foreach (var seat in row.Seats)
             {
@@ -196,7 +186,7 @@ namespace VisitorPlacementToolLibrary
         }
         private void OrderGroupsBySize()
         {
-            var orderedGroupsOnSize = Groups.OrderByDescending(x => x.Visitors.Count());
+            var orderedGroupsOnSize = Groups.OrderByDescending(x => x.ChildrenCount);
             Groups = orderedGroupsOnSize.ToList();
         }
         #endregion

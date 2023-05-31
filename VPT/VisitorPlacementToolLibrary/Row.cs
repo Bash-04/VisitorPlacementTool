@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace VisitorPlacementToolLibrary
 {
@@ -11,7 +10,7 @@ namespace VisitorPlacementToolLibrary
         // Properties
         public int RowNumber { get; private set; }
         // Code = Sector letter + RowNumber 
-        public string Code { get; private set; }
+        public string Code { get; private set;}
         public List<Seat> Seats { get; private set; }
         public int AvailableSeats { get; private set; }
         public bool Full { get; set; }
@@ -32,53 +31,11 @@ namespace VisitorPlacementToolLibrary
 
             for (int i = 0; i < length; i++)
             {
-                Seat seat = new Seat(Seats.Count + 1, Code);
+                Seat seat = new Seat(Seats.Count+1, Code);
                 Seats.Add(seat);
             }
 
             return seatsHaveBeenCreated;
-        }
-        #endregion
-
-        #region Sort
-        public void PlaceVisitors(Group group)
-        {
-            foreach (var visitor in group.Visitors)
-            {
-                if (!visitor.Seated)
-                {
-                    if (!visitor.Adult && RowNumber == 1)
-                    {
-                        PlaceInSeat(visitor, group);
-                    }
-                    else if (visitor.Adult)
-                    {
-                        PlaceInSeat(visitor, group);
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-                else
-                {
-                    continue;
-                }
-            }
-        }
-
-        private void PlaceInSeat(Visitor visitor, Group group)
-        {
-            foreach (var seat in Seats)
-            {
-                if (!seat.Occupied)
-                {
-                    seat.AssignVisitorToSeat(visitor);
-                    visitor.SeatVisitor(seat.Code);
-                    group.UnsortedGroupMembers--;
-                    break;
-                }
-            }
         }
         #endregion
 

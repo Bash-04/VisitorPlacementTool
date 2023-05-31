@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace VisitorPlacementToolLibrary
 {
@@ -16,7 +15,6 @@ namespace VisitorPlacementToolLibrary
         public bool Adult { get; private set; }
         public DateTime SignupDate { get; private set; }
         public string AssignedSeat { get; set; }
-        public bool Seated { get; private set; }
 
         // Constructors
         public Visitor()
@@ -79,11 +77,5 @@ namespace VisitorPlacementToolLibrary
             Name = name;
         }
         #endregion
-
-        public void SeatVisitor(string seat)
-        {
-            AssignedSeat = seat;
-            Seated = true;
-        }
     }
 }

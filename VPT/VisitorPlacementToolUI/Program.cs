@@ -12,7 +12,7 @@ vpt.TryCreateNewHappening();
 
 vpt.TryCreateRandomVisitors();
 
-vpt.StartSorting();
+vpt.PlaceVisitors();
 
 foreach (var sector in vpt.Happening.Sectors)
 {
