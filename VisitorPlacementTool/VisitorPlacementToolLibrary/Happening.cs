@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 
 namespace VisitorPlacementToolLibrary
 {
@@ -13,22 +14,28 @@ namespace VisitorPlacementToolLibrary
         public int AvailableSeats { get; private set; }
         public int VisitorCount { get; private set; }
         public int UnsortedVisitors { get; private set; }
-        public bool Full { get; set; }
+        public bool Full { get; private set; }
+        public bool FrontSeatsTaken { get; private set; }
 
         // Constructors
         public Happening()
         {
+            Sectors = new List<Sector>();
+            Registrations = new List<Group>();
+
             Id = Guid.NewGuid().ToString();
             Random random = new Random();
             int daysToSignup = random.Next(1, 31);
             SignupDeadline = DateOnly.FromDateTime(DateTime.Now.AddDays(-daysToSignup));
-            Sectors = new List<Sector>();
-            Registrations = new List<Group>();
+
+
+            CreateSectors();
+            CreateRandomVisitors();
         }
 
         // Methods
         #region Create
-        public bool CreateSectors()
+        private bool CreateSectors()
         {
             bool sectorsHaveBeenCreated = false;
             Random random = new Random();
@@ -57,7 +64,7 @@ namespace VisitorPlacementToolLibrary
             return sectorsHaveBeenCreated;
         }
 
-        public bool CreateRandomVisitors()
+        private bool CreateRandomVisitors()
         {
             bool visitorsAreCreated = false;
 
@@ -89,7 +96,7 @@ namespace VisitorPlacementToolLibrary
                 }
                 group.DefaultCheckAndCount();
 
-                if (!ExecuteChecks(group))
+                if (!ExecuteCreateGroupChecks(group))
                 {
                     continue;
                 }
@@ -100,45 +107,84 @@ namespace VisitorPlacementToolLibrary
         }
         #endregion
 
-        #region Sort
+        #region Place Visitors
         public void PlaceVisitors()
         {
             CountAvailableSeats();
             OrderGroups();
             PlaceGroups();
-            UnsortedVisitors = Registrations.Sum(group => group.UnsortedGroupMembers);
+            UnsortedVisitors = Registrations.Sum(group => group.UnseatedGroupMembers);
         }
 
         private void PlaceGroups()
         {
             foreach (var group in Registrations)
             {
-                if (AvailableSeats > group.Visitors.Count())
+                // Loop twice to make sure all group members are placed - if there aren't enough seats a group will be skipped
+                // was a while loop, but that caused an infinite loop because some groups were never placed because of rules in the PlaceInSector method
+                for (int i = 0; i < 2; i++)
                 {
-                    group.OrderGroupByAge();
-                    group.DefaultCheckAndCount();
-                    PlaceInSector(group);
-                    CountAvailableSeats();
-                }
-                else
-                {
-                    continue;
+                    if (AvailableSeats >= group.Visitors.Count())
+                    {
+                        group.OrderGroupByAge();
+                        group.DefaultCheckAndCount();
+                        TryPlaceInSector(group);
+                        CountAvailableSeats();
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    ExecuteHappeningChecks();
                 }
             }
         }
 
-        private void PlaceInSector(Group group)
+        private void TryPlaceInSector(Group group)
         {
             foreach (var sector in Sectors)
             {
+                group.DefaultCheckAndCount();
+                // if sector is full skip to next sector and check if unseated group members fit in the sector
                 if (!sector.CheckIfFull())
                 {
-                    sector.PlaceInRow(group);
+                    // try placing the group in the sector
+                    PlaceInSector(sector, group);
+
+                    // if group is not yet placed, place group in next sector
                     if (!group.IsPlaced)
                     {
                         continue;
                     }
                     break;
+                }
+            }
+        }
+
+        private void PlaceInSector(Sector sector, Group group)
+        {
+            // if group contains children and the sector has front seats available, place children in front seats
+            if (group.ContainsChildren && !sector.FrontSeatsTaken && !group.ChildrenArePlaced)
+            {
+                PlaceChildrenInSector(sector, group);
+            }
+            // if group does not contain children place group in sector
+            else if (!group.ContainsChildren || group.ChildrenArePlaced)
+            {
+                sector.PlaceInRow(group);
+            }
+        }
+
+        public void PlaceChildrenInSector(Sector sector, Group group)
+        {
+            // Make sure there are enough seats available to put a parent with the children in the front row
+            if (sector.Rows[0].AvailableSeats > group.ChildrenCount)
+            {
+                sector.PlaceInFirstRow(group);
+                group.DefaultCheckAndCount();
+                if (group.ChildrenArePlaced && !group.IsPlaced)
+                {
+                    sector.PlaceInRow(group);
                 }
             }
         }
@@ -170,7 +216,7 @@ namespace VisitorPlacementToolLibrary
         #endregion
 
         #region Check
-        public bool ExecuteChecks(Group group)
+        private bool ExecuteCreateGroupChecks(Group group)
         {
             bool groupIsValid = false;
             // If the group contains an adult, add it to the list of groups
@@ -189,7 +235,27 @@ namespace VisitorPlacementToolLibrary
             return groupIsValid;
         }
 
-        public bool CheckIfFull()
+        public void ExecuteHappeningChecks()
+        {
+            CheckIfFull();
+            CheckIfFrontSeatsTaken();
+        }
+
+        private bool CheckIfFrontSeatsTaken()
+        {
+            FrontSeatsTaken = true;
+            foreach (var sector in Sectors)
+            {
+                if (!sector.FrontSeatsTaken)
+                {
+                    FrontSeatsTaken = false;
+                    break;
+                }
+            }
+            return FrontSeatsTaken;
+        }
+
+        private bool CheckIfFull()
         {
             Full = true;
             foreach (var sector in Sectors)
@@ -209,6 +275,7 @@ namespace VisitorPlacementToolLibrary
         {
             OrderRegistrationsBySignupDate();
             OrderRegistrationsBySize();
+            OrderRegistrationsByChildrenCount();
         }
         private void OrderRegistrationsBySignupDate()
         {
@@ -220,21 +287,20 @@ namespace VisitorPlacementToolLibrary
             var orderedGroupsOnSize = Registrations.OrderByDescending(x => x.Visitors.Count());
             Registrations = orderedGroupsOnSize.ToList();
         }
+        private void OrderRegistrationsByChildrenCount()
+        {
+            var orderedGroupsOnChildrenCount = Registrations.OrderByDescending(x => x.ChildrenCount);
+            Registrations = orderedGroupsOnChildrenCount.ToList();
+        }
 
         private void OrderSectors()
         {
-            OrderSectorsByRowCount();
-            OrderSectorsByLenght();
+            OrderSectorsByTotalSeats();
         }
-        private void OrderSectorsByRowCount()
+        private void OrderSectorsByTotalSeats()
         {
-            var orderedSectionsOnRowCount = Sectors.OrderByDescending(x => x.RowCount);
+            var orderedSectionsOnRowCount = Sectors.OrderByDescending(x => x.TotalSeats);
             Sectors = orderedSectionsOnRowCount.ToList();
-        }
-        private void OrderSectorsByLenght()
-        {
-            var orderedSectionsOnLenght = Sectors.OrderByDescending(x => x.RowLength);
-            Sectors = orderedSectionsOnLenght.ToList();
         }
         #endregion
     }

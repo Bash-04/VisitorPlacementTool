@@ -52,8 +52,23 @@ namespace VisitorPlacementToolLibrary
         {
             foreach (var row in Rows)
             {
-                row.PlaceVisitors(group);
+                if (!row.CheckIfFull())
+                {
+                    row.PlaceVisitors(group);
+                }
+                group.DefaultCheckAndCount();
+                if (group.IsPlaced)
+                {
+                    break;
+                }
             }
+            CheckIfFrontSeatsTaken();
+        }
+
+        public void PlaceInFirstRow(Group group)
+        {
+            Rows[0].PlaceVisitors(group);
+            CheckIfFrontSeatsTaken();
         }
         #endregion
 
@@ -85,6 +100,16 @@ namespace VisitorPlacementToolLibrary
         #endregion
 
         #region Check
+        public bool CheckIfFrontSeatsTaken()
+        {
+            FrontSeatsTaken = false;
+            if (Rows[0].CheckIfFull())
+            {
+                FrontSeatsTaken = true;
+            }
+            return FrontSeatsTaken;
+        }
+
         public bool CheckIfFull()
         {
             Full = true;

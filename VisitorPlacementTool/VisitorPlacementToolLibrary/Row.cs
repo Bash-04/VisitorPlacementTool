@@ -75,7 +75,7 @@ namespace VisitorPlacementToolLibrary
                 {
                     seat.AssignVisitorToSeat(visitor);
                     visitor.SeatVisitor(seat.Code);
-                    group.UnsortedGroupMembers--;
+                    group.UnseatedGroupMembers--;
                     break;
                 }
             }

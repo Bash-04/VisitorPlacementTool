@@ -1,8 +1,6 @@
 ﻿using VisitorPlacementToolLibrary;
 
 Happening happening = new Happening();
-happening.CreateSectors();
-happening.CreateRandomVisitors();
 happening.PlaceVisitors();
 
 foreach (var sector in happening.Sectors)
@@ -22,7 +20,7 @@ Console.WriteLine();
 
 foreach (var group in happening.Registrations)
 {
-    Console.WriteLine($"{group.Id} - {group.Visitors.Count()} Visitors - {group.UnsortedGroupMembers} Unseated");
+    Console.WriteLine($"{group.Id} - {group.Visitors.Count()} Visitors - {group.UnseatedGroupMembers} Unseated");
     foreach (var visitor in group.Visitors)
     {
         string adultOrChild = visitor.Adult ? "adult" : "child";
