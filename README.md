@@ -1,2 +1,2 @@
 # Visitor Placement Tool
- VPT is an algorithmic learning project
+ Visitor Placement Tool is an algorithmic learning project
