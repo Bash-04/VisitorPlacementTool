@@ -16,6 +16,7 @@ namespace VisitorPlacementToolLibrary
         public int RowLength { get; private set; }
         public bool Full { get; set; }
         public bool FrontSeatsTaken { get; private set; }
+        public bool BackSeatsTaken { get; private set; }
         public int TotalSeats { get; private set; }
         public int AvailableSeats { get; private set; }
 
@@ -62,13 +63,23 @@ namespace VisitorPlacementToolLibrary
                     break;
                 }
             }
-            CheckIfFrontSeatsTaken();
+            CheckIfBackRowSeatsAreTaken();
+            CheckIfFrontSeatsAreTaken();
         }
 
         public void PlaceInFirstRow(Group group)
         {
             Rows[0].PlaceVisitors(group);
-            CheckIfFrontSeatsTaken();
+            CheckIfFrontSeatsAreTaken();
+        }
+
+        public void PlaceInBackRows(Group group)
+        {
+            for (int i = 1; i < RowCount; i++)
+            {
+                Rows[i].PlaceVisitors(group);
+                CheckIfBackRowSeatsAreTaken();
+            }
         }
         #endregion
 
@@ -100,7 +111,7 @@ namespace VisitorPlacementToolLibrary
         #endregion
 
         #region Check
-        public bool CheckIfFrontSeatsTaken()
+        public bool CheckIfFrontSeatsAreTaken()
         {
             FrontSeatsTaken = false;
             if (Rows[0].CheckIfFull())
@@ -108,6 +119,27 @@ namespace VisitorPlacementToolLibrary
                 FrontSeatsTaken = true;
             }
             return FrontSeatsTaken;
+        }
+
+        public bool CheckIfBackRowSeatsAreTaken()
+        {
+            BackSeatsTaken = true;
+            if (Rows.Count() > 1)
+            {
+                for (int i = 1; i < RowCount; i++)
+                {
+                    if (!Rows[i].CheckIfFull())
+                    {
+                        BackSeatsTaken = false;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                BackSeatsTaken = true;
+            }
+            return BackSeatsTaken;
         }
 
         public bool CheckIfFull()

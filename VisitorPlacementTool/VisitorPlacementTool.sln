@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisitorPlacementToolConsole", "VisitorPlacementToolConsole\VisitorPlacementToolConsole.csproj", "{3FCCC0B5-CBE7-4431-8AC7-57EC03736083}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisitorPlacementToolConsole", "VisitorPlacementToolConsole\VisitorPlacementToolConsole.csproj", "{3FCCC0B5-CBE7-4431-8AC7-57EC03736083}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisitorPlacementToolLibrary", "VisitorPlacementToolLibrary\VisitorPlacementToolLibrary.csproj", "{5DE90E48-6BD6-4D36-88F4-5D37072C31E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisitorPlacementToolLibrary", "VisitorPlacementToolLibrary\VisitorPlacementToolLibrary.csproj", "{5DE90E48-6BD6-4D36-88F4-5D37072C31E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisitorPlacementToolLibraryTests", "VisitorPlacementToolLibraryTests\VisitorPlacementToolLibraryTests.csproj", "{86DBFE32-0B21-4205-BAE1-4524981FE260}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{5DE90E48-6BD6-4D36-88F4-5D37072C31E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DE90E48-6BD6-4D36-88F4-5D37072C31E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DE90E48-6BD6-4D36-88F4-5D37072C31E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86DBFE32-0B21-4205-BAE1-4524981FE260}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86DBFE32-0B21-4205-BAE1-4524981FE260}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86DBFE32-0B21-4205-BAE1-4524981FE260}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86DBFE32-0B21-4205-BAE1-4524981FE260}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

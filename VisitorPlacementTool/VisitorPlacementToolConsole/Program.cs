@@ -31,4 +31,4 @@ foreach (var group in happening.Registrations)
 
 Console.WriteLine($"{happening.Registrations.Count()} groups");
 Console.WriteLine($"{happening.VisitorCount} visitors");
-Console.WriteLine($"{happening.UnsortedVisitors} unseated visitors");
+Console.WriteLine($"{happening.UnseatedVisitors} unseated visitors");
