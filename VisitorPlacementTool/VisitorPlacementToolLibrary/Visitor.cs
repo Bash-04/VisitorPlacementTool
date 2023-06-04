@@ -13,6 +13,9 @@ namespace VisitorPlacementToolLibrary
         public string Name { get; private set; }
         public DateOnly DateOfBirth { get; private set; }
         public int Age { get; private set; }
+        /// <summary>
+        /// A visitor is an adult when the visitor is 12 years or older at the time of the visit.
+        /// </summary>
         public bool Adult { get; private set; }
         public DateTime SignupDate { get; private set; }
         public string AssignedSeat { get; set; }
