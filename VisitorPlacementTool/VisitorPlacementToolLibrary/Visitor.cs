@@ -29,6 +29,23 @@ namespace VisitorPlacementToolLibrary
             GetDateOfBirth();
             GetName();
         }
+        public Visitor(DateOnly dateOfBirth)
+        {
+            Id = Guid.NewGuid().ToString();
+            GetRandomSignupDate();
+            GetName();
+
+            DateOfBirth = dateOfBirth;
+            Age = DateTime.Now.Year - DateOfBirth.Year;
+            if (Age >= 12)
+            {
+                Adult = true;
+            }
+            else
+            {
+                Adult = false;
+            }
+        }
         public Visitor(string empty)
         {
             Name = empty;
@@ -61,7 +78,7 @@ namespace VisitorPlacementToolLibrary
             }
         }
 
-        public void GetName()
+        private void GetName()
         {
             Random r = new Random();
             int nameLength = r.Next(2, 5);

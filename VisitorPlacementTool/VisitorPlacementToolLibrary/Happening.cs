@@ -18,6 +18,7 @@ namespace VisitorPlacementToolLibrary
         private bool FrontSeatsTaken { get; set; }
         private bool BackSeatsTaken { get; set; }
         private int MaxRowLenght { get; set; }
+        public int ClosedSectors { get; private set; }
 
         // Constructors
         public Happening()
@@ -125,6 +126,19 @@ namespace VisitorPlacementToolLibrary
             OrderGroups();
             PlaceGroups();
             UnseatedVisitors = Registrations.Sum(group => group.UnseatedGroupMembers);
+            CloseUnusedSectors();
+        }
+
+        private void CloseUnusedSectors()
+        {
+            foreach (var sector in Sectors)
+            {
+                if (sector.AvailableSeats == sector.TotalSeats)
+                {
+                    sector.Close();
+                    ClosedSectors++;
+                }
+            }
         }
 
         private void PlaceGroups()
@@ -229,7 +243,7 @@ namespace VisitorPlacementToolLibrary
         #endregion
 
         #region Count
-        public int CountMaxVisitors()
+        private int CountMaxVisitors()
         {
             MaxVisitors = 0;
 
@@ -241,7 +255,7 @@ namespace VisitorPlacementToolLibrary
             return MaxVisitors;
         }
 
-        public int CountAvailableSeats()
+        private int CountAvailableSeats()
         {
             AvailableSeats = 0;
             foreach (var sector in Sectors)
@@ -275,7 +289,7 @@ namespace VisitorPlacementToolLibrary
             return groupIsValid;
         }
 
-        public void ExecuteHappeningChecks()
+        private void ExecuteHappeningChecks()
         {
             CheckIfFull();
             CheckIfFrontSeatsTaken();

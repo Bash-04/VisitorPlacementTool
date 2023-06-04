@@ -5,15 +5,18 @@ happening.PlaceVisitors();
 
 foreach (var sector in happening.Sectors)
 {
+    string openOrClosed = sector.Opened ? "opened" : "closed";
+    Console.WriteLine($"Sector {sector.SectorLetter} - {openOrClosed} - {sector.TotalSeats} seats");
     foreach (var row in sector.Rows)
     {
         foreach (var seat in row.Seats)
         {
-            Console.WriteLine($"{seat.Code} - {seat.Visitor.Name}");
+            Console.WriteLine($"    {seat.Code} - {seat.Visitor.Name}");
         }
     }
 }
 Console.WriteLine($"{happening.Sectors.Count()} sectors");
+Console.WriteLine($"{happening.ClosedSectors} closed sectors");
 Console.WriteLine($"{happening.MaxVisitors} seats");
 Console.WriteLine($"{happening.AvailableSeats} empty seats");
 Console.WriteLine();

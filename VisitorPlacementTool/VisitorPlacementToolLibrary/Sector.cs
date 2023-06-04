@@ -12,11 +12,11 @@ namespace VisitorPlacementToolLibrary
         public char SectorLetter { get; private set; }
         public bool Opened { get; private set; }
         public List<Row> Rows { get; private set; }
-        public int RowCount { get; private set; }
-        public int RowLength { get; private set; }
-        public bool Full { get; set; }
+        private int RowCount { get; set; }
+        private int RowLength { get; set; }
+        public bool Full { get; private set; }
         public bool FrontSeatsTaken { get; private set; }
-        public bool BackSeatsTaken { get; private set; }
+        private bool BackSeatsTaken { get; set; }
         public int TotalSeats { get; private set; }
         public int AvailableSeats { get; private set; }
 
@@ -27,6 +27,7 @@ namespace VisitorPlacementToolLibrary
             SectorLetter = sectorLetter;
             RowCount = rowCount;
             RowLength = rowLength;
+            Opened = true;
         }
 
         // Methods
@@ -84,7 +85,7 @@ namespace VisitorPlacementToolLibrary
         #endregion
 
         #region Count
-        public int CountTotalSeats()
+        private int CountTotalSeats()
         {
             TotalSeats = 0;
 
@@ -111,7 +112,7 @@ namespace VisitorPlacementToolLibrary
         #endregion
 
         #region Check
-        public bool CheckIfFrontSeatsAreTaken()
+        private bool CheckIfFrontSeatsAreTaken()
         {
             FrontSeatsTaken = false;
             if (Rows[0].CheckIfFull())
@@ -154,6 +155,11 @@ namespace VisitorPlacementToolLibrary
                 }
             }
             return Full;
+        }
+
+        public void Close()
+        {
+            Opened = false;
         }
         #endregion
     }

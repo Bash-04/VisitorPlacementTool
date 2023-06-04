@@ -84,7 +84,6 @@ namespace VisitorPlacementToolLibrary
                     {
                         EarliestSignupDate = Visitors[i].SignupDate;
                         hasEarliestSignupDate = true;
-                        break;
                     }
                 }
             }
@@ -123,10 +122,12 @@ namespace VisitorPlacementToolLibrary
         #endregion
 
         #region Order by
-        public void OrderGroupByAge()
+        public Group OrderGroupByAge()
         {
             var orderedGroupOnAge = Visitors.OrderByDescending(x => x.DateOfBirth);
             Visitors = orderedGroupOnAge.ToList();
+
+            return this;
         }
         #endregion
     }
