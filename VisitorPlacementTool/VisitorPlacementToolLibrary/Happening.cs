@@ -121,7 +121,6 @@ namespace VisitorPlacementToolLibrary
         #region Place Visitors
         public void PlaceVisitors()
         {
-            CountAvailableSeats();
             OrderGroups();
             PlaceGroups();
             UnseatedVisitors = Registrations.Sum(group => group.UnseatedGroupMembers);
