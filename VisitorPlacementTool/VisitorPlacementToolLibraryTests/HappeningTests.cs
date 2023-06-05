@@ -42,5 +42,42 @@ namespace VisitorPlacementToolLibrary.Tests
             // Assert
             Assert.AreNotEqual(happening.AvailableSeats, happening.MaxVisitors);
         }
+
+
+        [TestMethod()]
+        public void PlaceVisitorsWithTenChildrenTest()
+        {
+            // Arrange
+            Happening happening = new Happening();
+            happening.Registrations = new List<Group>();
+            Group group = new Group();
+            DateOnly dateOfBirthChild = new DateOnly(2015, 1, 1);
+            DateOnly dateOfBirthAdult = new DateOnly(2000, 1, 1);
+            for (int i = 0; i < 10; i++)
+            {
+                group.Visitors.Add(new Visitor(dateOfBirthChild));
+            }
+            for (int i = 0; i < 2; i++)
+            {
+                group.Visitors.Add(new Visitor(dateOfBirthAdult));
+            }
+            group.DefaultCheckAndCount();
+
+            // Act
+            happening.ExecuteCreateGroupChecks(group);
+            Console.WriteLine($"{happening.Registrations.Count()} groups for this event");
+            foreach (var g in happening.Registrations)
+            {
+                Console.WriteLine(g.Id);
+                foreach (var visitor in g.Visitors)
+                {
+                    Console.WriteLine($"{visitor.Name} - {(visitor.Adult ? "adult" : "child")}");
+                }
+                Console.WriteLine();
+            }
+
+            // Assert
+            Assert.IsTrue(happening.Registrations.Count() == 2);
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace VisitorPlacementToolLibrary
         public int MaxVisitors { get; private set; }
         private DateTime SignupDeadline { get; set; }
         public List<Sector> Sectors { get; private set; }
-        public List<Group> Registrations { get; private set; }
+        public List<Group> Registrations { get; set; }
         public int AvailableSeats { get; private set; }
         public int VisitorCount { get; private set; }
         public int UnseatedVisitors { get; private set; }
@@ -268,7 +268,7 @@ namespace VisitorPlacementToolLibrary
         #endregion
 
         #region Check
-        private bool ExecuteCreateGroupChecks(Group group)
+        public bool ExecuteCreateGroupChecks(Group group)
         {
             bool groupIsValid = true;
             // if the group contains to many children for being on the first row with at least one adult, skip the group
@@ -281,12 +281,49 @@ namespace VisitorPlacementToolLibrary
             {
                 groupIsValid = false;
             }
+            else if (group.ChildrenCount > 9 && group.AdultCount > 1)
+            {
+                List<Group> groups = SplitGroup(group);
+                foreach (var g in groups)
+                {
+                    g.DefaultCheckAndCount();
+                    Registrations.Add(g);
+                }
+            }
             else
             {
                 group.DefaultCheckAndCount();
                 Registrations.Add(group);
             }
             return groupIsValid;
+        }
+
+        private List<Group> SplitGroup(Group group)
+        {
+            Group group1 = new Group();
+            Group group2 = new Group();
+
+            int visitor1 = 0;
+            int visitor2 = 1;
+            for (int i = 0; i < group.Visitors.Count(); i++)
+            {
+                if (visitor1 >= group.Visitors.Count())
+                {
+                    break;
+                }
+                group1.Visitors.Add(group.Visitors[visitor1]);
+                visitor1 += 2;
+                if (group.Visitors.Count() >= visitor2)
+                {
+                    group2.Visitors.Add(group.Visitors[visitor2]);
+                    visitor2 += 2;
+                }
+            }
+            List<Group> groups = new List<Group>();
+            groups.Add(group1);
+            groups.Add(group2);
+
+            return groups;
         }
 
         private void ExecuteHappeningChecks()
