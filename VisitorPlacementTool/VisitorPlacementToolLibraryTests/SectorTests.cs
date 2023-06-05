@@ -127,7 +127,6 @@ namespace VisitorPlacementToolLibrary.Tests
             Sector sector = new Sector(a, 3, 7);
 
             // Act
-            sector.CreateRows();
             Console.WriteLine($"{sector.Rows.Count()} rows");
             Console.WriteLine($"{sector.Rows.Sum(x => x.Seats.Count())} seats");
 

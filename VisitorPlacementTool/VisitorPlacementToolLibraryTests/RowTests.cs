@@ -16,10 +16,9 @@ namespace VisitorPlacementToolLibrary.Tests
         public void CreateSeatsTest()
         {
             // Arrange
-            Row row = new Row(1, 'A');
+            Row row = new Row(1, 'A', 5);
 
             // Act
-            row.CreateSeats(5);
             foreach (Seat seat in row.Seats)
             {
                 Console.WriteLine(seat.Code);
@@ -33,8 +32,7 @@ namespace VisitorPlacementToolLibrary.Tests
         public Row PlaceVisitorsTest()
         {
             // Arrange
-            Row row = new Row(1, 'A');
-            row.CreateSeats(5);
+            Row row = new Row(1, 'A', 5);
             Group group = new Group();
             for (int i = 0; i < 5; i++)
             {
@@ -60,10 +58,9 @@ namespace VisitorPlacementToolLibrary.Tests
         public void CountAvailableSeatsTest()
         {
             // Arrange
-            Row row = new Row(1, 'A');
+            Row row = new Row(1, 'A', 5);
 
             // Act
-            row.CreateSeats(5);
             row.CountAvailableSeats();
             Console.WriteLine($"There are {row.AvailableSeats} available seats");
 
@@ -75,8 +72,7 @@ namespace VisitorPlacementToolLibrary.Tests
         public void CheckIfFullTest()
         {
             // Arrange
-            Row row = new Row(1, 'A');
-            row.CreateSeats(5);
+            Row row = new Row(1, 'A', 5);
             Group group = new Group();
             for (int i = 0; i < 5; i++)
             {

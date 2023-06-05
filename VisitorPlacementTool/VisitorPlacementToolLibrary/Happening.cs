@@ -52,7 +52,6 @@ namespace VisitorPlacementToolLibrary
                 int RowLength = random.Next(3, MaxRowLenght+1);
 
                 Sector sector = new Sector(sectorLetter, RowsCount, RowLength);
-                sector.CreateRows();
                 Sectors.Add(sector);
             }
 
@@ -303,25 +302,27 @@ namespace VisitorPlacementToolLibrary
             Group group1 = new Group();
             Group group2 = new Group();
 
-            int visitor1 = 0;
-            int visitor2 = 1;
+            int countVisitor1 = 0;
+            int countVisitor2 = 1;
             for (int i = 0; i < group.Visitors.Count(); i++)
             {
-                if (visitor1 >= group.Visitors.Count())
+                if (countVisitor1 >= group.Visitors.Count())
                 {
                     break;
                 }
-                group1.Visitors.Add(group.Visitors[visitor1]);
-                visitor1 += 2;
-                if (group.Visitors.Count() >= visitor2)
+                group1.Visitors.Add(group.Visitors[countVisitor1]);
+                countVisitor1 += 2;
+                if (group.Visitors.Count() >= countVisitor2)
                 {
-                    group2.Visitors.Add(group.Visitors[visitor2]);
-                    visitor2 += 2;
+                    group2.Visitors.Add(group.Visitors[countVisitor2]);
+                    countVisitor2 += 2;
                 }
             }
-            List<Group> groups = new List<Group>();
-            groups.Add(group1);
-            groups.Add(group2);
+            List<Group> groups = new List<Group>
+            {
+                group1,
+                group2
+            };
 
             return groups;
         }

@@ -18,11 +18,12 @@ namespace VisitorPlacementToolLibrary
         public bool Full { get; set; }
 
         // Constructors
-        public Row(int rowNumber, char sectorLetter)
+        public Row(int rowNumber, char sectorLetter, int length)
         {
             RowNumber = rowNumber;
             Code = sectorLetter.ToString() + RowNumber.ToString();
             Seats = new List<Seat>();
+            CreateSeats(length);
         }
 
         // Methods

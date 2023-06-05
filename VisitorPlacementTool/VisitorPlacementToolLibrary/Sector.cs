@@ -28,6 +28,7 @@ namespace VisitorPlacementToolLibrary
             RowCount = rowCount;
             RowLength = rowLength;
             Opened = true;
+            CreateRows();
         }
 
         // Methods
@@ -38,8 +39,7 @@ namespace VisitorPlacementToolLibrary
 
             for (int i = 0; i < RowCount; i++)
             {
-                Row row = new Row(i + 1, SectorLetter);
-                row.CreateSeats(RowLength);
+                Row row = new Row(i + 1, SectorLetter, RowLength);
                 Rows.Add(row);
             }
 
