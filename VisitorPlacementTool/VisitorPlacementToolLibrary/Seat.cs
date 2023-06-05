@@ -9,7 +9,7 @@ namespace VisitorPlacementToolLibrary
     public class Seat
     {
         // Properties
-        public int FollowNumber { get; private set; }
+        private int FollowNumber { get; set; }
         // Sector row code + "-"follownumber = Code
         public string Code { get; private set; }
         public bool Occupied { get; private set; }

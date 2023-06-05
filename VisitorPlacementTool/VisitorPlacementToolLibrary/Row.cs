@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,9 +10,9 @@ namespace VisitorPlacementToolLibrary
     public class Row
     {
         // Properties
-        public int RowNumber { get; private set; }
+        private int RowNumber { get; set; }
         // Code = Sector letter + RowNumber 
-        public string Code { get; private set; }
+        private string Code { get; set; }
         public List<Seat> Seats { get; private set; }
         public int AvailableSeats { get; private set; }
         public bool Full { get; set; }

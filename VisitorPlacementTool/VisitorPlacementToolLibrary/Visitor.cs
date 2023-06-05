@@ -9,7 +9,7 @@ namespace VisitorPlacementToolLibrary
     public class Visitor
     {
         // Properties
-        public string Id { get; private set; }
+        private string Id { get; set; }
         public string Name { get; private set; }
         public DateOnly DateOfBirth { get; private set; }
         public int Age { get; private set; }
