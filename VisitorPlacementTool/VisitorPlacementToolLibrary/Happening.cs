@@ -186,7 +186,7 @@ namespace VisitorPlacementToolLibrary
                     if (!sector.CheckIfFull())
                     {
                         // try placing the group in the sector
-                        PlaceInSector(sector, group);
+                        sector.PlaceVisitors(sector, group);
 
                         // if group is not yet placed, place group in next sector
                         if (!group.IsPlaced)
@@ -203,40 +203,6 @@ namespace VisitorPlacementToolLibrary
                 }
             }
             return groupCanBePlaced;
-        }
-
-        private void PlaceInSector(Sector sector, Group group)
-        {
-            // if group contains children and the sector has front seats available, place children in front seats
-            if (group.ContainsChildren && !sector.FrontSeatsTaken && !group.ChildrenArePlaced)
-            {
-                PlaceChildrenInSector(sector, group);
-            }
-            // if group does not contain children place group in sector
-            else if (!group.ContainsChildren || group.ChildrenArePlaced)
-            {
-                sector.PlaceInBackRows(group);
-            }
-            // if back seats are taken and front seats are available, place group in front seats
-            if (CheckIfBackSeatsTaken() && !sector.FrontSeatsTaken) 
-            { 
-                sector.PlaceInFirstRow(group);
-            }
-        }
-
-        private void PlaceChildrenInSector(Sector sector, Group group)
-        {
-            // Make sure there are enough seats available to put a parent with the children in the front row
-            if (sector.Rows[0].AvailableSeats > group.ChildrenCount)
-            {
-                sector.PlaceInFirstRow(group);
-                group.DefaultCheckAndCount();
-                // if children are placed and not all group members are placed, place the rest of the group in the back rows
-                if (group.ChildrenArePlaced && !group.IsPlaced)
-                {
-                    sector.PlaceInRow(group);
-                }
-            }
         }
         #endregion
 
