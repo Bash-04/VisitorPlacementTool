@@ -28,6 +28,8 @@ namespace VisitorPlacementToolLibrary
             GetRandomSignupDate();
             GetDateOfBirth();
             GetName();
+            Seated = false;
+            AssignedSeat = "";
         }
         public Visitor(DateOnly dateOfBirth)
         {
@@ -45,10 +47,14 @@ namespace VisitorPlacementToolLibrary
             {
                 Adult = false;
             }
+            Seated = false;
+            AssignedSeat = "";
         }
         public Visitor(string empty)
         {
             Name = empty;
+            Seated = false;
+            AssignedSeat = "";
         }
 
         // Methods
@@ -102,8 +108,11 @@ namespace VisitorPlacementToolLibrary
 
         public void SeatVisitor(string seat)
         {
-            AssignedSeat = seat;
-            Seated = true;
+            if (!Seated)
+            {
+                AssignedSeat = seat;
+                Seated = true;
+            }
         }
     }
 }

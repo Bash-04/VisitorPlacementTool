@@ -29,6 +29,8 @@ namespace VisitorPlacementToolLibrary
             RowLength = rowLength;
             Opened = true;
             CreateRows();
+            CountAvailableSeats();
+            CountTotalSeats();
         }
 
         // Methods
@@ -85,7 +87,7 @@ namespace VisitorPlacementToolLibrary
             }
         }
 
-        public void PlaceInRow(Group group)
+        private void PlaceInRow(Group group)
         {
             foreach (var row in Rows)
             {
@@ -103,13 +105,13 @@ namespace VisitorPlacementToolLibrary
             CheckIfFrontSeatsAreTaken();
         }
 
-        public void PlaceInFirstRow(Group group)
+        private void PlaceInFirstRow(Group group)
         {
             Rows[0].PlaceVisitors(group);
             CheckIfFrontSeatsAreTaken();
         }
 
-        public void PlaceInBackRows(Group group)
+        private void PlaceInBackRows(Group group)
         {
             for (int i = 1; i < RowCount; i++)
             {

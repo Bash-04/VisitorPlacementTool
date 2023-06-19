@@ -20,14 +20,18 @@ namespace VisitorPlacementToolLibrary
         {
             FollowNumber = seatNumber;
             Code = rowCode + "-" + FollowNumber.ToString();
-            Visitor = new Visitor("");
+            Visitor = new Visitor(""); 
+            Occupied = false;
         }
 
         // Methods
         public void AssignVisitorToSeat(Visitor visitor)
         {
-            Visitor = visitor;
-            Occupied = true;
+            if (visitor.AssignedSeat == "")
+            {
+                Visitor = visitor;
+                Occupied = true;
+            }
         }
     }
 }

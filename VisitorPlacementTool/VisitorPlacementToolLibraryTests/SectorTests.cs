@@ -19,7 +19,6 @@ namespace VisitorPlacementToolLibrary.Tests
             Sector sector = new Sector(a, 2, 7);
 
             // Act
-            sector.CreateRows();
             Console.WriteLine($"{sector.Rows.Count()} rows");
             Console.WriteLine($"{sector.Rows.Sum(x => x.Seats.Count())} seats");
 
@@ -28,7 +27,7 @@ namespace VisitorPlacementToolLibrary.Tests
         }
 
         [TestMethod()]
-        public void PlaceInRowTest()
+        public void PlaceInVisitorsTest()
         {
             // Arrange
             Sector sector = new Sector('A', 2, 7);
@@ -38,10 +37,10 @@ namespace VisitorPlacementToolLibrary.Tests
                 group.Visitors.Add(new Visitor());
             }
             group.OrderGroupByAge();
-            sector.CreateRows();
+            group.DefaultCheckAndCount();
 
             // Act
-            sector.PlaceInRow(group);
+            sector.PlaceVisitors(sector, group);
             foreach (var vis in group.Visitors)
             {
                 Console.WriteLine($"{vis.Name} is an {(vis.Adult ? "adult" : "child")} and is placed in {vis.AssignedSeat}");
@@ -60,15 +59,17 @@ namespace VisitorPlacementToolLibrary.Tests
             // Arrange
             Sector sector = new Sector('A', 2, 7);
             Group group = new Group();
-            for (int i = 0; i < 5; i++)
+            DateOnly dateOfBirth = DateOnly.FromDateTime(DateTime.Now.AddYears(-5));
+            group.Visitors.Add(new Visitor(dateOfBirth));
+            for (int i = 0; i < 6; i++)
             {
                 group.Visitors.Add(new Visitor());
             }
             group.OrderGroupByAge();
-            sector.CreateRows();
+            group.DefaultCheckAndCount();
 
             // Act
-            sector.PlaceInFirstRow(group);
+            sector.PlaceVisitors(sector, group);
             foreach (var vis in group.Visitors)
             {
                 Console.WriteLine($"{vis.Name} is an {(vis.Adult ? "adult" : "child")} and is placed in {vis.AssignedSeat}");
@@ -79,7 +80,7 @@ namespace VisitorPlacementToolLibrary.Tests
             }
 
             // Assert
-            Assert.IsTrue(sector.Rows[0].AvailableSeats == 2);
+            Assert.IsTrue(sector.Rows[0].AvailableSeats == 0);
             Assert.IsTrue(sector.Rows[1].AvailableSeats == 7);
         }
 
@@ -89,15 +90,16 @@ namespace VisitorPlacementToolLibrary.Tests
             // Arrange
             Sector sector = new Sector('A', 2, 7);
             Group group = new Group();
+            DateOnly dateOfBirth = DateOnly.FromDateTime(DateTime.Now.AddYears(-20));
             for (int i = 0; i < 7; i++)
             {
-                group.Visitors.Add(new Visitor());
+                group.Visitors.Add(new Visitor(dateOfBirth));
             }
             group.OrderGroupByAge();
             sector.CreateRows();
 
             // Act
-            sector.PlaceInBackRows(group);
+            sector.PlaceVisitors(sector, group);
             foreach (var vis in group.Visitors)
             {
                 string childOrAdult = vis.Adult ? "adult" : "child";
@@ -148,7 +150,7 @@ namespace VisitorPlacementToolLibrary.Tests
             sector.CreateRows();
 
             // Act
-            sector.PlaceInBackRows(group);
+            sector.PlaceVisitors(sector, group);
             foreach (var vis in group.Visitors)
             {
                 string childOrAdult = vis.Adult ? "adult" : "child";
@@ -184,7 +186,7 @@ namespace VisitorPlacementToolLibrary.Tests
             sector.CreateRows();
 
             // Act
-            sector.PlaceInRow(group);
+            sector.PlaceVisitors(sector, group);
             foreach (var vis in group.Visitors)
             {
                 string childOrAdult = vis.Adult ? "adult" : "child";
@@ -195,6 +197,37 @@ namespace VisitorPlacementToolLibrary.Tests
             foreach (var vis in group.Visitors)
             {
                 Assert.IsTrue(vis.AssignedSeat != "");
+            }
+        }
+
+        [TestMethod()]
+        public void FailCheckIfFullTest()
+        {
+            // Arrange
+            Sector sector = new Sector('A', 2, 7);
+            Group group = new Group();
+            for (int i = 0; i < 13; i++)
+            {
+                group.Visitors.Add(new Visitor());
+            }
+            group.OrderGroupByAge();
+            sector.CreateRows();
+
+            // Act
+            sector.PlaceVisitors(sector, group);
+            foreach (var vis in group.Visitors)
+            {
+                string childOrAdult = vis.Adult ? "adult" : "child";
+                Console.WriteLine($"{vis.Name} is an {childOrAdult} and is placed in {vis.AssignedSeat}");
+            }
+
+            // Assert
+            foreach (var vis in group.Visitors)
+            {
+                if (vis.AssignedSeat == "")
+                {
+                    Assert.IsTrue(vis.AssignedSeat == "");
+                }
             }
         }
 
